@@ -1,7 +1,10 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model, isValidObjectId } = require('mongoose');
 
 const userSchema = new Schema(
   {
+    id: {
+      type: String,
+    },
     title: {
       type: String,
     },
