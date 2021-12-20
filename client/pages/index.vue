@@ -23,10 +23,10 @@
 
     <div class="name" v-if="post.length === 0"><h4>Пока нет никаких записей</h4></div>
 
-    <div v-else class="posts" v-for="posts in post">
+    <div v-else class="posts" v-for="posts in post" :key='posts.id'>
       <div><strong>Название:</strong> {{posts.title}} </div>
       <div><strong>Описание:</strong> {{posts.body}} </div>
-      <button class="btn" @click="deleteTodo">Удалить</button>
+      <button class="btn" @click="deleteTodo(posts.id)">Удалить</button>
     </div>
 
   </section>
@@ -40,10 +40,9 @@ export default {
   data() {
     return {
       post: [],
-      obj: {
-        title: '',
-        body: ''
-      }
+      title: '',
+      body: '',
+      
     }
   },
   methods: {
@@ -57,6 +56,7 @@ export default {
       this.post.push(newPost)
 
       let todoObj = this.obj = {
+        id: newPost.id,
         title: this.title,
         body: this.body
       }
@@ -71,8 +71,15 @@ export default {
       this.title = ''
       this.body = ''
     },
-    deleteTodo(){
-      this.post.splice(this.post.indexOf(),1);
+    deleteTodo(id){
+      axios.delete('http://localhost:9000/api/' + id)
+      .then((response) => {
+        console.log(response)
+        this.post = this.post.filter(p => p.id !== id)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
     },
     async fetcP() {
       try {
